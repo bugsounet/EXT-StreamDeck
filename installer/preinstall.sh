@@ -65,10 +65,10 @@ fi
 
 echo
 # check dependencies
-#dependencies=()
-#Installer_info "Checking all dependencies..."
-#Installer_update_dependencies
-#Installer_success "All Dependencies needed are installed !"
+dependencies=(libusb-1.0-0-dev libudev-dev)
+Installer_info "Checking all dependencies..."
+Installer_update_dependencies
+Installer_success "All Dependencies needed are installed !"
 
 echo
 Installer_info "Installing all npm libraries..."

@@ -1,7 +1,7 @@
 /***********************
 *  EXT-StreamDeck v1.0 *
 *  Bugsounet           *
-*  11/2022             *
+*  12/2022             *
 ***********************/
 
 Module.register("EXT-StreamDeck", {
