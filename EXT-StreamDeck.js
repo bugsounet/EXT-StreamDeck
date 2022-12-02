@@ -11,7 +11,7 @@ Module.register("EXT-StreamDeck", {
     Brightness: 50,
     EcoBrightness: 0,
     EcoTime: 10000,
-    keyFinder: true,
+    keyFinder: false,
     keys: [
       {
         key: 0,
