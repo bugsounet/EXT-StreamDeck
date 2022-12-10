@@ -123,7 +123,7 @@ module.exports = NodeHelper.create({
       return console.log("[STREAMDECK] No keys defined!")
     }
     this.config.keys.forEach(async key => {
-      var bmpImg = await Jimp.read(path.resolve(__dirname, "resources/"+key.logo)).then((img) => {
+      var bmpImg = await Jimp.read(path.resolve(__dirname, "resources/"+key.logo+".png")).then((img) => {
         return img.resize(this.streamDeck.ICON_SIZE, this.streamDeck.ICON_SIZE)
       })
       var img = bmpImg.bitmap.data

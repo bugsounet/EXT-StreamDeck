@@ -8,45 +8,57 @@ Module.register("EXT-StreamDeck", {
   defaults: {
     debug: false,
     device: null,
-    Brightness: 50,
-    EcoBrightness: 0,
+    Brightness: 100,
+    EcoBrightness: 10,
     EcoTime: 10000,
     keyFinder: false,
     keys: [
       {
         key: 0,
-        logo: "tv-on.png",
+        logo: "tv-on",
         notification: "EXT_SCREEN-WAKEUP",
+        payload: null,
+        command: null,
         sound: "opening"
       },
       {
         key: 1,
-        logo: "spotify.png",
+        logo: "spotify",
         notification: "EXT_SPOTIFY-PLAY",
+        payload: null,
+        command: null,
         sound: "opening"
       },
       {
         key: 2,
-        logo: "volume-up.png",
-        notification: "EXT_VOLUME-UP",
+        logo: "volume-up",
+        notification: "EXT_VOLUME-SPEAKER_UP",
+        payload: null,
+        command: null,
         sound: "up"
       },
       {
         key: 3,
-        logo: "tv-off.png",
+        logo: "tv-off",
         notification: "EXT_SCREEN-END",
+        payload: null,
+        command: null,
         sound: "closing"
       },
       {
         key: 4,
-        logo: "stop.png",
+        logo: "stop",
         notification: "EXT_STOP",
+        payload: null,
+        command: null,
         sound: "closing"
       },
       {
         key: 5,
-        logo: "volume-down.png",
-        notification: "EXT_VOLUME-DOWN",
+        logo: "volume-down",
+        notification: "EXT_VOLUME-SPEAKER_DOWN",
+        payload: null,
+        command: null,
         sound: "down"
       }
     ]
