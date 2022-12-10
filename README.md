@@ -8,7 +8,7 @@ Naturally, you can use this EXT plugin with or without out `MMM-GoogleAssistant`
 
 ## Installation / update / configuration
 
-Read the docs in [wiki](https://wiki.bugsounet.fr/en/EXT-SteamDeck)
+Read the docs in [wiki](https://wiki.bugsounet.fr/en/EXT-StreamDeck)
 
 ## Support and Helping
 New forum and support for all @bugsounet modules is now localized [there](https://forum.bugsounet.fr) !
