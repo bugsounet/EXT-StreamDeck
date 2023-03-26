@@ -1,14 +1,16 @@
 {
   "name": "EXT-StreamDeck",
-  "version": "1.0.1",
-  "rev": "230312",
+  "version": "1.1.0",
+  "rev": "230326",
   "description": "Keybord plugin",
   "main": "EXT-StreamDeck.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh",
     "postinstall": "installer/postinstall.sh",
     "update": "installer/update.sh",
-    "setup": "installer/setup.sh"
+    "setup": "installer/setup.sh",
+    "reset": "git reset --hard",
+    "clean": "rm -rf node_modules package-lock.json"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,9 @@
   "homepage": "https://wiki.bugsounet.fr",
   "dependencies": {
     "@elgato-stream-deck/node": "^5.7.0",
-    "jimp": "^0.16.2"
+    "check-node-version": "^4.2.1",
+    "glob": "^9.3.2",
+    "jimp": "^0.16.2",
+    "minify": "^9.2.0"
   }
 }

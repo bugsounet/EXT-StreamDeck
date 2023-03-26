@@ -1,7 +1,7 @@
 /************************
-*  EXT-StreamDeck v1.0  *
+*  EXT-StreamDeck v1.1  *
 *  Bugsounet            *
-*  12/2022              *
+*  03/2023              *
 *************************/
 
 const exec = require("child_process").exec
@@ -24,12 +24,9 @@ module.exports = NodeHelper.create({
   initialize: async function(payload) {
     console.log("[STREAMDECK] EXT-StreamDeck Version:", require('./package.json').version, "rev:", require('./package.json').rev)
     this.config = payload
-    if (this.config.debug) {
-      log = (...args) => { console.log("[STREAMDECK]", ...args) }
-    }
-    if (this.config.keys.length && Array.isArray(this.config.keys)) {
-      log("keys:", this.config.keys)
-    } else { 
+    if (this.config.debug) log = (...args) => { console.log("[STREAMDECK]", ...args) }
+    if (this.config.keys.length && Array.isArray(this.config.keys)) log("keys:", this.config.keys)
+    else {
       console.log("[STREAMDECK] No keys found in config!")
       this.sendSocketNotification("WARNING", { message: "No keys found in config!"} )
       return
@@ -41,9 +38,7 @@ module.exports = NodeHelper.create({
       return console.error("[STREAMDECK] No Stream Deck Found!")
     }
     streamDecksList.forEach((device) => {
-      if (!this.streamDecks[device.path]) {
-        this.addDevice(device).catch((e) => console.error("[STREAMDECK] AddDevice failed:", e))
-      }
+      if (!this.streamDecks[device.path]) this.addDevice(device).catch((e) => console.error("[STREAMDECK] AddDevice failed:", e))
     })
     if (!this.config.device) this.streamDeck = this.streamDecks["/dev/hidraw0"] // maybe default !?
     else this.streamDeck = this.streamDecks[this.config.device]
@@ -146,6 +141,7 @@ module.exports = NodeHelper.create({
       this.deckStandby()
     })
     log("StreamDeck is initialized!")
+    this.sendSocketNotification("INITIALIZED")
     this.deckStandby()
   },
 
