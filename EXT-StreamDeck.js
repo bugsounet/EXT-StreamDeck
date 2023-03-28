@@ -1,7 +1,7 @@
 /***********************
-*  EXT-StreamDeck v1.0 *
+*  EXT-StreamDeck v1.1 *
 *  Bugsounet           *
-*  12/2022             *
+*  03/2023             *
 ***********************/
 
 Module.register("EXT-StreamDeck", {
@@ -67,6 +67,7 @@ Module.register("EXT-StreamDeck", {
   start: function() {
     this.resources = "/modules/EXT-StreamDeck/resources/"
     this.audio = null
+    this.ready= false
   },
 
   getDom: function() {
@@ -76,15 +77,16 @@ Module.register("EXT-StreamDeck", {
   },
 
   notificationReceived: function(noti, payload, sender) {
-    switch(noti) {
-      case "DOM_OBJECTS_CREATED":
+    if (noti == "GW_READY") {
+      if (sender.name == "Gateway") {
         this.sendSocketNotification("INIT", this.config)
         this.audio = new Audio()
         this.audio.autoplay = true
-        break
-      case "GAv5_READY":
-        if (sender.name == "MMM-GoogleAssistant") this.sendNotification("EXT_HELLO", this.name)
-        break
+      }
+    }
+    if (!this.ready) return
+
+    switch(noti) {
       case "EXT_STREAMDECK-ON":
         this.sendSocketNotification("ON")
         break
@@ -96,6 +98,10 @@ Module.register("EXT-StreamDeck", {
 
   socketNotificationReceived: function(noti, payload) {
     switch(noti) {
+      case "INITIALIZED":
+        this.ready= true
+        this.sendNotification("EXT_HELLO", this.name)
+        break
       case "WARNING":
         this.sendNotification("EXT_ALERT", {
           type: "warning",
