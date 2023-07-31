@@ -26,7 +26,7 @@
   "homepage": "https://wiki.bugsounet.fr",
   "dependencies": {
     "@elgato-stream-deck/node": "^5.7.0",
-    "esbuild": "^0.18.16",
+    "esbuild": "^0.18.17",
     "glob": "^10.3.3",
     "jimp": "^0.16.2"
   }
