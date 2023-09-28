@@ -1,7 +1,7 @@
 {
   "name": "EXT-StreamDeck",
-  "version": "1.1.1",
-  "rev": "230723",
+  "version": "1.1.2",
+  "rev": "230929",
   "description": "Keybord plugin",
   "main": "EXT-StreamDeck.js",
   "scripts": {
