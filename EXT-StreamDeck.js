@@ -77,8 +77,8 @@ Module.register("EXT-StreamDeck", {
   },
 
   notificationReceived: function(noti, payload, sender) {
-    if (noti == "GW_READY") {
-      if (sender.name == "Gateway") {
+    if (noti == "GA_READY") {
+      if (sender.name == "MMM-GoogleAssistant") {
         this.sendSocketNotification("INIT", this.config)
         this.audio = new Audio()
         this.audio.autoplay = true
