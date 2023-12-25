@@ -32,21 +32,22 @@ module.exports = NodeHelper.create({
       return
     }
     console.log("[STREAMDECK] Search and open StreamDeck...")
-    const streamDecksList =  await listStreamDecks()
+    const streamDecksList = await listStreamDecks()
     if (!streamDecksList.length) {
       this.sendSocketNotification("WARNING", { message: "No Stream Deck Found!"} )
       return console.error("[STREAMDECK] No Stream Deck Found!")
     }
-    streamDecksList.forEach((device) => {
-      if (!this.streamDecks[device.path]) this.addDevice(device).catch((e) => console.error("[STREAMDECK] AddDevice failed:", e))
+
+    var promise = streamDecksList.map(device => this.addDevice(device).catch((e) => console.error("[STREAMDECK] AddDevice failed:", e)))
+    Promise.all(promise).then(async () => {
+      if (!this.config.device) this.streamDeck = await this.streamDecks["/dev/hidraw0"] // maybe default !?
+      else this.streamDeck = await this.streamDecks[this.config.device]
+      if (!this.streamDeck) {
+        this.sendSocketNotification("WARNING", { message: "Stream Deck NOT Found!"} )
+        return console.error("[STREAMDECK] device:",  this.config.device ,"--> Stream Deck NOT Found!")
+      }
+      this.initStreamDeck()
     })
-    if (!this.config.device) this.streamDeck = this.streamDecks["/dev/hidraw0"] // maybe default !?
-    else this.streamDeck = this.streamDecks[this.config.device]
-    if (!this.streamDeck) {
-      this.sendSocketNotification("WARNING", { message: "Stream Deck NOT Found!"} )
-      return console.error("[STREAMDECK] device:",  this.config.device ,"--> Stream Deck NOT Found!")
-    }
-    this.initStreamDeck()
   },
 
   socketNotificationReceived: function(noti, payload) {
@@ -65,19 +66,22 @@ module.exports = NodeHelper.create({
 
   addDevice: async function (info) {
     const path = info.path
-    console.log("[STREAMDECK] Found model:", info.model, "Path:", info.path, "serialNumber:", info.serialNumber)
-    this.streamDecks[path] = openStreamDeck(path)
-    this.streamDecks[path].on('error', (e) => {
-      console.error("[STREAMDECK]", e)
-      // assuming any error means we lost connection
-      this.streamDecks[path].removeAllListeners()
-      delete this.streamDecks[path]
+    return new Promise(async resolve => {
+      console.log("[STREAMDECK] Found model:", info.model, "Path:", info.path, "serialNumber:", info.serialNumber)
+      this.streamDecks[path] = await openStreamDeck(path)
+      this.streamDecks[path].on('error', async (e) => {
+        console.error("[STREAMDECK]", e)
+        // assuming any error means we lost connection
+        await this.streamDecks[path].removeAllListeners()
+        delete this.streamDecks[path]
+      })
+      resolve()
     })
   },
 
   initStreamDeck: async function() {
     log("Reset Displayer...")
-    this.streamDeck.resetToLogo()
+    await this.streamDeck.resetToLogo()
     if (this.config.Brightness > 100) this.config.Brightness = 100
     if (this.config.Brightness <= 5) this.config.Brightness = 5
     if (this.config.EcoBrightness > this.config.Brightness) this.config.EcoBrightness = this.config.Brightness
@@ -125,7 +129,7 @@ module.exports = NodeHelper.create({
       await this.streamDeck.fillKeyBuffer(key.key, img, { format: 'rgba' }).catch((e) => console.error("[STREAMDECK] Fill failed:", e))
     })
     this.streamDeck.on('down', async (keyIndex) => {
-	    log('Press Button', keyIndex)
+      log('Press Button', keyIndex)
       if (this.config.keyFinder) this.sendSocketNotification("KEYFINDER", { key: keyIndex })
       this.deckSetBrightness()
       this.config.keys.forEach(async key => {
