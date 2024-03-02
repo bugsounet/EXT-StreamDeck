@@ -28,6 +28,6 @@
     "@elgato-stream-deck/node": "^6.0.0",
     "esbuild": "^0.20.1",
     "glob": "^10.3.10",
-    "jimp": "^0.22.10"
+    "jimp": "^0.22.12"
   }
 }
