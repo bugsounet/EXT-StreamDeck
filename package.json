@@ -42,7 +42,7 @@
     "@elgato-stream-deck/node": "^6.2.0",
     "esbuild": "^0.23.1",
     "glob": "^10.4.5",
-    "jimp": "^0.22.12"
+    "jimp": "^1.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
