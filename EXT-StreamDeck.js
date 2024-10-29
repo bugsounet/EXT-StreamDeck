@@ -102,7 +102,7 @@ Module.register("EXT-StreamDeck", {
         this.sendNotification("EXT_HELLO", this.name);
         break;
       case "WARNING":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           type: "warning",
           message: payload.message
         });
@@ -114,7 +114,7 @@ Module.register("EXT-StreamDeck", {
         this.audio.src= `${this.resources + payload}.mp3`;
         break;
       case "KEYFINDER":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           type: "information",
           message: `You pressed key number: ${payload.key}`,
           timer: 3000
