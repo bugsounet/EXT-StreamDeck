@@ -39,7 +39,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@elgato-stream-deck/node": "^6.2.0",
+    "@elgato-stream-deck/node": "^6.2.2",
     "esbuild": "^0.24.0",
     "glob": "^11.0.0",
     "jimp": "^0.22.12"
