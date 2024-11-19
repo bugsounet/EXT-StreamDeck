@@ -66,7 +66,7 @@ Module.register("EXT-StreamDeck", {
   start () {
     this.resources = "/modules/EXT-StreamDeck/resources/";
     this.audio = null;
-    this.ready= false;
+    this.ready = false;
   },
 
   getDom () {
@@ -85,7 +85,7 @@ Module.register("EXT-StreamDeck", {
     }
     if (!this.ready) return;
 
-    switch(noti) {
+    switch (noti) {
       case "EXT_STREAMDECK-ON":
         this.sendSocketNotification("ON");
         break;
@@ -96,9 +96,9 @@ Module.register("EXT-StreamDeck", {
   },
 
   socketNotificationReceived (noti, payload) {
-    switch(noti) {
+    switch (noti) {
       case "INITIALIZED":
-        this.ready= true;
+        this.ready = true;
         this.sendNotification("EXT_HELLO", this.name);
         break;
       case "WARNING":
@@ -111,7 +111,7 @@ Module.register("EXT-StreamDeck", {
         this.sendNotification(payload.notification, payload.payload || undefined);
         break;
       case "SOUND":
-        this.audio.src= `${this.resources + payload}.mp3`;
+        this.audio.src = `${this.resources + payload}.mp3`;
         break;
       case "KEYFINDER":
         this.sendNotification("GA_ALERT", {

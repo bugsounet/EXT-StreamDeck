@@ -14,7 +14,7 @@ var NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
   start () {
-    this.streamDeck= null;
+    this.streamDeck = null;
     this.streamDecks = [];
     this.ecoTimer = null;
     this.isInDeep = false;
@@ -27,13 +27,13 @@ module.exports = NodeHelper.create({
     if (this.config.keys.length && Array.isArray(this.config.keys)) log("keys:", this.config.keys);
     else {
       console.log("[STREAMDECK] No keys found in config!");
-      this.sendSocketNotification("WARNING", { message: "No keys found in config!" } );
+      this.sendSocketNotification("WARNING", { message: "No keys found in config!" });
       return;
     }
     console.log("[STREAMDECK] Search and open StreamDeck...");
     const streamDecksList = await listStreamDecks();
     if (!streamDecksList.length) {
-      this.sendSocketNotification("WARNING", { message: "No Stream Deck Found!" } );
+      this.sendSocketNotification("WARNING", { message: "No Stream Deck Found!" });
       return console.error("[STREAMDECK] No Stream Deck Found!");
     }
 
@@ -42,8 +42,8 @@ module.exports = NodeHelper.create({
       if (!this.config.device) this.streamDeck = await this.streamDecks["/dev/hidraw0"]; // maybe default !?
       else this.streamDeck = await this.streamDecks[this.config.device];
       if (!this.streamDeck) {
-        this.sendSocketNotification("WARNING", { message: "Stream Deck NOT Found!" } );
-        return console.error("[STREAMDECK] device:",  this.config.device ,"--> Stream Deck NOT Found!");
+        this.sendSocketNotification("WARNING", { message: "Stream Deck NOT Found!" });
+        return console.error("[STREAMDECK] device:", this.config.device, "--> Stream Deck NOT Found!");
       }
       this.initStreamDeck();
     });
@@ -63,7 +63,9 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async addDevice (info) {
+  /* eslint-disable no-async-promise-executor */
+  // to do better, I have no StreamDeck for resolve and testing
+  addDevice (info) {
     const path = info.path;
     return new Promise(async (resolve) => {
       console.log("[STREAMDECK] Found model:", info.model, "Path:", info.path, "serialNumber:", info.serialNumber);
@@ -77,6 +79,7 @@ module.exports = NodeHelper.create({
       resolve();
     });
   },
+  /* eslint-enable no-async-promise-executor */
 
   async initStreamDeck () {
     log("Reset Displayer...");
@@ -101,6 +104,7 @@ module.exports = NodeHelper.create({
     }
     this.streamDeck.clearPanel();
     await this.sleep(500);
+
     /* Full screen BuGs logo */
     bmpImg = await Jimp.read(path.resolve(__dirname, "resources/logo.png")).then((img) => {
       return img.resize(this.streamDeck.ICON_SIZE * this.streamDeck.KEY_COLUMNS, this.streamDeck.ICON_SIZE * this.streamDeck.KEY_ROWS);
@@ -111,13 +115,13 @@ module.exports = NodeHelper.create({
       await this.streamDeck.fillPanelBuffer(img, { format: "rgba" }).catch((e) => console.error("[STREAMDECK] Fill failed:", e));
       await this.sleep(125);
     }
-    
+
     this.streamDeck.clearPanel();
     await this.sleep(500);
 
     log("Set Config...");
     if (!this.config.keys.length) {
-      this.sendSocketNotification("WARNING", { message: "No keys defined!" } );
+      this.sendSocketNotification("WARNING", { message: "No keys defined!" });
       return console.log("[STREAMDECK] No keys defined!");
     }
     this.config.keys.forEach(async (key) => {
@@ -155,16 +159,16 @@ module.exports = NodeHelper.create({
   shellExec (command) {
     let cwdPath = path.resolve(__dirname, "scripts/");
     if (!command) {
-      this.sendSocketNotification("WARNING", { message: "ShellExec: no command to execute!" } );
+      this.sendSocketNotification("WARNING", { message: "ShellExec: no command to execute!" });
       return console.log("[STREAMDECK] ShellExec: no command to execute!");
     }
-    exec (command, { cwd: cwdPath }, (e,so,se)=> {
+    exec(command, { cwd: cwdPath }, (e, so, se) => {
       log("ShellExec command:", command);
       if (e) {
         console.log(`[STREAMDECK] ShellExec Error:${e}`);
-        this.sendSocketNotification("WARNING", { message: "ShellExec: execute Error !" } );
+        this.sendSocketNotification("WARNING", { message: "ShellExec: execute Error !" });
       }
-    
+
       log("SHELLEXEC_RESULT", {
         executed: command,
         result: {
@@ -173,7 +177,7 @@ module.exports = NodeHelper.create({
           stdErr: se
         }
       });
-    });    
+    });
   },
 
   deckStandby () {
@@ -182,15 +186,15 @@ module.exports = NodeHelper.create({
     this.ecoTimer = setTimeout(() => {
       log("Go in Deep...");
       this.streamDeck.setBrightness(this.config.EcoBrightness).catch((e) => console.error("[STREAMDECK] Set brightness failed:", e));
-      this.isInDeep= true;
-    },this.config.EcoTime);
+      this.isInDeep = true;
+    }, this.config.EcoTime);
   },
 
-  deckSetBrightness (force=false) {
+  deckSetBrightness (force = false) {
     clearTimeout(this.ecoTimer);
     if (!this.streamDeck || (!force && !this.isInDeep)) return;
     log("Set Brightness...");
     this.streamDeck.setBrightness(this.config.Brightness).catch((e) => console.error("[STREAMDECK] Set brightness failed:", e));
-    this.isInDeep= false;
+    this.isInDeep = false;
   }
 });
